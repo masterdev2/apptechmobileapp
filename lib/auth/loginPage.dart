@@ -2,19 +2,15 @@ import 'package:apptech/Widget/bezierContainer.dart';
 import 'package:apptech/Widget/gradient_button.dart';
 import 'package:apptech/Widget/styled_text_field.dart';
 import 'package:apptech/auth/signup.dart';
-import 'package:apptech/dashboard/DashboardPage.dart';
+import 'package:apptech/bloc/authentication.dart' as _auth;
+import 'package:apptech/ressources/commun/myLabels.dart';
+import 'package:apptech/ressources/commun/myMethods.dart';
+import 'package:apptech/ressources/commun/myStyles.dart';
 import 'package:apptech/ressources/values/languages.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-
-import 'package:apptech/bloc/authentication.dart' as _auth;
-import 'package:apptech/bloc/authentication.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/material.dart';
-import 'package:apptech/widget/background.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
 
 class LoginPage extends StatefulWidget {
   @override
@@ -24,10 +20,11 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   TextEditingController _user_nameController;
   TextEditingController _passwordController;
+
   //AuthenticationFormBloc _authenticationFormBloc;
 
   DateTime _currentBackPressTime = DateTime.now().add(Duration(seconds: -10));
-  Authentication _authBloc;
+  _auth.Authentication _authBloc;
   var connectivityResult;
 
   @override
@@ -84,7 +81,7 @@ class _LoginPageState extends State<LoginPage> {
           child: StyledTextField(
             controller: _passwordController,
             hintText: hint,
-            textColor: Color(0xff21346f),
+            textColor: MyStyles.textColor,
             obscureText: true,
             icon: Icons.lock,
             color: Colors.blueGrey,
@@ -104,9 +101,9 @@ class _LoginPageState extends State<LoginPage> {
             horizontal: 15,
           ),
           child: GradientButton(
-            text: "connecter",
-            colorEnd: Color(0xffc6c2df),
-            colorStart: Color(0xff867bc9),
+            text: MyLabels.label_connect,
+            colorEnd: MyStyles.endColor,
+            colorStart: MyStyles.startColor,
             onPressed: //            (snapshot.hasData && snapshot.data == true) ?
                 () async {
               if (connectivityResult == ConnectivityResult.mobile ||
@@ -164,80 +161,79 @@ class _LoginPageState extends State<LoginPage> {
       child: SafeArea(
         child: Scaffold(
           body: new Stack(
-              children: [
-                Positioned(
-                  top: -MediaQuery.of(context).size.height * .15,
-                  right: -MediaQuery.of(context).size.width * .4,
-                  child: BezierContainer(),
-                ),
-                        LayoutBuilder(
-                  builder: (BuildContext context,
-                            BoxConstraints constraintss) =>
-                        SingleChildScrollView(
-                            child: ConstrainedBox(
-                          constraints:
-                              BoxConstraints(minHeight: constraintss.maxHeight),
-                          child: Center(
-                            child: Column(children: <Widget>[
-                              Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 22)),
-                              Padding(padding: EdgeInsets.all(10)),
-                              emailField(emailHint),
-                              passwordField(passHint),
-                              submitButton(butText, auth),
-                              new Container(
-                                margin: EdgeInsets.zero,
-                                child: Wrap(
-                                    crossAxisAlignment: WrapCrossAlignment.center,
-                                    //  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      Padding(padding: EdgeInsets.zero),
-                                      Column(
-                                        children: <Widget>[
-                                          new FlatButton(
-                                              onPressed: () {
-                                                Navigator.of(context).push(
-                                                  PageRouteBuilder(
-                                                    pageBuilder:
-                                                        (context, _, __) {
-                                                      return SignUpPage();
-                                                    },
-                                                  ),
-                                                );
-                                              },
-                                              child: new Text(
-                                                "Créer un Compte",
-                                                style: TextStyle(
-                                                    fontSize: 15.0,
-                                                    fontWeight: FontWeight.normal,
-                                                    color: Color(0xff21346f)),
-                                              ))
-                                        ],
+            children: [
+              Positioned(
+                top: -MediaQuery.of(context).size.height * .15,
+                right: -MediaQuery.of(context).size.width * .4,
+                child: BezierContainer(),
+              ),
+              LayoutBuilder(
+                builder: (BuildContext context, BoxConstraints constraintss) =>
+                    SingleChildScrollView(
+                  child: ConstrainedBox(
+                    constraints:
+                        BoxConstraints(minHeight: constraintss.maxHeight),
+                    child: Center(
+                      child: Column(
+                        children: <Widget>[
+                          Padding(padding: EdgeInsets.symmetric(vertical: 22)),
+                          Padding(padding: EdgeInsets.all(10)),
+                          emailField(emailHint),
+                          passwordField(passHint),
+                          submitButton(butText, auth),
+                          new Container(
+                            margin: EdgeInsets.zero,
+                            child: Wrap(
+                              crossAxisAlignment: WrapCrossAlignment.center,
+                              //  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Padding(padding: EdgeInsets.zero),
+                                Column(
+                                  children: <Widget>[
+                                    new FlatButton(
+                                        onPressed: () {
+//                                          Navigator.of(context).push(
+//                                            PageRouteBuilder(
+//                                              pageBuilder: (context, _, __) {
+//                                                return SignUpPage();
+//                                              },
+//                                            ),
+//                                          );
+                                          MyMethods.navigate(0, SignUpPage());
+                                        },
+                                        child: new Text(
+                                          MyLabels.label_create_compte,
+                                          style: MyStyles.textStyle,
+                                        ))
+                                  ],
+                                ),
+                                Text(
+                                  MyLabels.label_separator,
+                                  style: MyStyles.textStyle,
+                                ),
+                                Column(
+                                  children: <Widget>[
+                                    new FlatButton(
+                                      onPressed: () {},
+                                      child: Text(
+                                        MyLabels.label_forgot_password,
+                                        style: MyStyles.textStyle,
+                                        textDirection: TextDirection.rtl,
                                       ),
-                                      Text(
-                                        "|",
-                                        style: TextStyle(color: Color(0xff21346f)),
-                                      ),
-                                      Column(children: <Widget>[
-                                        new FlatButton(
-                                            onPressed: () {
-
-                              },
-                                            child: Text(
-                                              "Mot de passe oublié",
-                                              style: TextStyle(
-                                                  fontSize: 15.0,
-                                                  fontWeight: FontWeight.normal,
-                                                  color: Color(0xff21346f)),
-                                              textDirection: TextDirection.rtl,
-                                            )),
-                                      ])
-                                    ]),
-                              ),
-                            ]),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
                           ),
-                        ))),
-                      ]),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
